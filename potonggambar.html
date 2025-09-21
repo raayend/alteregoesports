@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Auto Cropper</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #0056b3;
+            background: rgba(0,123,255,0.1);
+        }
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: rgba(40,167,69,0.1);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .preview-item {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .preview-item h4 {
+            margin: 10px 0 5px 0;
+            color: #333;
+        }
+        .preview-item img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+        .download-btn:hover {
+            background: #218838;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+            display: none;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Avatar Auto Cropper</h1>
+        <p>Upload avatar images dan sistem akan otomatis memotong mereka menjadi ukuran yang seragam.</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <p>📁 Drag & Drop gambar kesini atau</p>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                Pilih Gambar
+            </button>
+            <input type="file" id="fileInput" multiple accept="image/*">
+            <p><small>Support: JPG, PNG, GIF, WebP</small></p>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Ukuran Output:</label>
+                <input type="number" id="outputSize" value="200" min="50" max="500">
+            </div>
+            <div class="control-group">
+                <label>Metode Crop:</label>
+                <select id="cropMethod">
+                    <option value="center">Center Crop</option>
+                    <option value="smart">Smart Crop (Background Detection)</option>
+                    <option value="circle">Circle Detection (Recommended)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Format Output:</label>
+                <select id="outputFormat">
+                    <option value="png">PNG</option>
+                    <option value="jpg">JPEG</option>
+                    <option value="webp">WebP</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Kualitas (untuk JPEG):</label>
+                <input type="range" id="quality" min="50" max="100" value="90">
+                <span id="qualityValue">90</span>
+            </div>
+        </div>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <script>
+        class AvatarCropper {
+            constructor() {
+                this.setupEventListeners();
+                this.processedImages = [];
+            }
+            
+            setupEventListeners() {
+                const fileInput = document.getElementById('fileInput');
+                const uploadArea = document.getElementById('uploadArea');
+                const qualitySlider = document.getElementById('quality');
+                const qualityValue = document.getElementById('qualityValue');
+                
+                fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
+                
+                // Drag & Drop
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    this.handleFiles(e.dataTransfer.files);
+                });
+                
+                // Quality slider
+                qualitySlider.addEventListener('input', (e) => {
+                    qualityValue.textContent = e.target.value;
+                });
+            }
+            
+            async handleFiles(files) {
+                const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+                
+                if (imageFiles.length === 0) {
+                    alert('Tidak ada file gambar yang valid!');
+                    return;
+                }
+                
+                const progressBar = document.getElementById('progressBar');
+                const progressFill = document.getElementById('progressFill');
+                progressBar.style.display = 'block';
+                
+                this.processedImages = [];
+                
+                for (let i = 0; i < imageFiles.length; i++) {
+                    const file = imageFiles[i];
+                    
+                    // Update progress
+                    const progress = ((i + 1) / imageFiles.length) * 100;
+                    progressFill.style.width = progress + '%';
+                    
+                    try {
+                        const croppedImage = await this.cropImage(file);
+                        this.processedImages.push({
+                            original: file.name,
+                            cropped: croppedImage,
+                            downloadUrl: croppedImage.url
+                        });
+                    } catch (error) {
+                        console.error(`Error processing ${file.name}:`, error);
+                    }
+                }
+                
+                progressBar.style.display = 'none';
+                this.displayResults();
+            }
+            
+            cropImage(file) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    img.onload = () => {
+                        const outputSize = parseInt(document.getElementById('outputSize').value);
+                        const cropMethod = document.getElementById('cropMethod').value;
+                        const outputFormat = document.getElementById('outputFormat').value;
+                        const quality = parseInt(document.getElementById('quality').value) / 100;
+                        
+                        // Create temporary canvas for analysis
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = img.width;
+                        tempCanvas.height = img.height;
+                        tempCtx.drawImage(img, 0, 0);
+                        
+                        let sourceX, sourceY, sourceSize;
+                        
+                        if (cropMethod === 'circle') {
+                            // Advanced circle detection for avatars
+                            const circleData = this.detectCircularAvatar(tempCanvas, tempCtx);
+                            if (circleData) {
+                                sourceX = circleData.x - circleData.radius;
+                                sourceY = circleData.y - circleData.radius;
+                                sourceSize = circleData.radius * 2;
+                                
+                                // Add some padding
+                                const padding = circleData.radius * 0.1;
+                                sourceX = Math.max(0, sourceX - padding);
+                                sourceY = Math.max(0, sourceY - padding);
+                                sourceSize = Math.min(sourceSize + padding * 2, 
+                                                    Math.min(img.width - sourceX, img.height - sourceY));
+                            } else {
+                                // Fallback to center crop
+                                sourceSize = Math.min(img.width, img.height) * 0.9;
+                                sourceX = (img.width - sourceSize) / 2;
+                                sourceY = (img.height - sourceSize) / 2;
+                            }
+                        } else if (cropMethod === 'smart') {
+                            // Smart crop with background detection
+                            const bounds = this.detectContentBounds(tempCanvas, tempCtx);
+                            if (bounds) {
+                                const centerX = (bounds.left + bounds.right) / 2;
+                                const centerY = (bounds.top + bounds.bottom) / 2;
+                                const width = bounds.right - bounds.left;
+                                const height = bounds.bottom - bounds.top;
+                                
+                                sourceSize = Math.max(width, height) * 1.2; // Add padding
+                                sourceX = Math.max(0, centerX - sourceSize / 2);
+                                sourceY = Math.max(0, centerY - sourceSize / 2);
+                                
+                                // Ensure we don't go out of bounds
+                                sourceSize = Math.min(sourceSize, 
+                                                    Math.min(img.width - sourceX, img.height - sourceY));
+                            } else {
+                                // Fallback
+                                sourceSize = Math.min(img.width, img.height);
+                                sourceX = (img.width - sourceSize) / 2;
+                                sourceY = Math.max(0, (img.height - sourceSize) / 3);
+                            }
+                        } else {
+                            // Center crop
+                            sourceSize = Math.min(img.width, img.height);
+                            sourceX = (img.width - sourceSize) / 2;
+                            sourceY = (img.height - sourceSize) / 2;
+                        }
+                        
+                        // Set up output canvas
+                        canvas.width = outputSize;
+                        canvas.height = outputSize;
+                        
+                        // Draw cropped image with smooth scaling
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, sourceX, sourceY, sourceSize, sourceSize, 0, 0, outputSize, outputSize);
+                        
+                        // Convert to desired format
+                        let mimeType = 'image/png';
+                        if (outputFormat === 'jpg') mimeType = 'image/jpeg';
+                        if (outputFormat === 'webp') mimeType = 'image/webp';
+                        
+                        canvas.toBlob((blob) => {
+                            const url = URL.createObjectURL(blob);
+                            const fileName = file.name.replace(/\.[^/.]+$/, '') + '_cropped.' + outputFormat;
+                            
+                            resolve({
+                                blob: blob,
+                                url: url,
+                                fileName: fileName,
+                                canvas: canvas
+                            });
+                        }, mimeType, quality);
+                    };
+                    
+                    img.onerror = () => reject(new Error('Failed to load image'));
+                    img.src = URL.createObjectURL(file);
+                });
+            }
+            
+            detectCircularAvatar(canvas, ctx) {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                // Get corner colors to detect background
+                const corners = [
+                    this.getPixelColor(pixels, 0, 0, width),
+                    this.getPixelColor(pixels, width-1, 0, width),
+                    this.getPixelColor(pixels, 0, height-1, width),
+                    this.getPixelColor(pixels, width-1, height-1, width)
+                ];
+                
+                // Find most common corner color (likely background)
+                const bgColor = this.getMostCommonColor(corners);
+                
+                // Find content bounds by detecting non-background pixels
+                let minX = width, maxX = 0, minY = height, maxY = 0;
+                let contentPixels = [];
+                
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const color = this.getPixelColor(pixels, x, y, width);
+                        if (!this.colorsAreSimilar(color, bgColor, 30)) {
+                            contentPixels.push({x, y});
+                            minX = Math.min(minX, x);
+                            maxX = Math.max(maxX, x);
+                            minY = Math.min(minY, y);
+                            maxY = Math.max(maxY, y);
+                        }
+                    }
+                }
+                
+                if (contentPixels.length === 0) return null;
+                
+                // Calculate center and radius
+                const centerX = (minX + maxX) / 2;
+                const centerY = (minY + maxY) / 2;
+                
+                // Calculate average distance from center to content pixels (estimate radius)
+                let totalDistance = 0;
+                contentPixels.forEach(pixel => {
+                    const distance = Math.sqrt(
+                        Math.pow(pixel.x - centerX, 2) + Math.pow(pixel.y - centerY, 2)
+                    );
+                    totalDistance += distance;
+                });
+                
+                const avgRadius = totalDistance / contentPixels.length;
+                const radius = Math.min(avgRadius * 1.1, Math.min(width, height) / 2 * 0.9);
+                
+                return {
+                    x: centerX,
+                    y: centerY,
+                    radius: radius
+                };
+            }
+            
+            detectContentBounds(canvas, ctx) {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                // Sample edge pixels to determine background color
+                const edgePixels = [];
+                
+                // Top and bottom edges
+                for (let x = 0; x < width; x += 10) {
+                    edgePixels.push(this.getPixelColor(pixels, x, 0, width));
+                    edgePixels.push(this.getPixelColor(pixels, x, height-1, width));
+                }
+                
+                // Left and right edges
+                for (let y = 0; y < height; y += 10) {
+                    edgePixels.push(this.getPixelColor(pixels, 0, y, width));
+                    edgePixels.push(this.getPixelColor(pixels, width-1, y, width));
+                }
+                
+                const bgColor = this.getMostCommonColor(edgePixels);
+                
+                // Find content boundaries
+                let left = width, right = 0, top = height, bottom = 0;
+                let hasContent = false;
+                
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const color = this.getPixelColor(pixels, x, y, width);
+                        if (!this.colorsAreSimilar(color, bgColor, 25)) {
+                            hasContent = true;
+                            left = Math.min(left, x);
+                            right = Math.max(right, x);
+                            top = Math.min(top, y);
+                            bottom = Math.max(bottom, y);
+                        }
+                    }
+                }
+                
+                return hasContent ? {left, right, top, bottom} : null;
+            }
+            
+            getPixelColor(pixels, x, y, width) {
+                const index = (y * width + x) * 4;
+                return {
+                    r: pixels[index],
+                    g: pixels[index + 1],
+                    b: pixels[index + 2],
+                    a: pixels[index + 3]
+                };
+            }
+            
+            colorsAreSimilar(color1, color2, threshold = 20) {
+                const rDiff = Math.abs(color1.r - color2.r);
+                const gDiff = Math.abs(color1.g - color2.g);
+                const bDiff = Math.abs(color1.b - color2.b);
+                return (rDiff + gDiff + bDiff) / 3 < threshold;
+            }
+            
+            getMostCommonColor(colors) {
+                const colorCounts = {};
+                
+                colors.forEach(color => {
+                    // Round to nearest 10 to group similar colors
+                    const key = `${Math.round(color.r/10)*10}-${Math.round(color.g/10)*10}-${Math.round(color.b/10)*10}`;
+                    colorCounts[key] = (colorCounts[key] || 0) + 1;
+                });
+                
+                let maxCount = 0;
+                let mostCommon = colors[0];
+                
+                Object.keys(colorCounts).forEach(key => {
+                    if (colorCounts[key] > maxCount) {
+                        maxCount = colorCounts[key];
+                        const parts = key.split('-');
+                        mostCommon = {
+                            r: parseInt(parts[0]),
+                            g: parseInt(parts[1]),
+                            b: parseInt(parts[2])
+                        };
+                    }
+                });
+                
+                return mostCommon;
+            }
+            
+            displayResults() {
+                const previewGrid = document.getElementById('previewGrid');
+                previewGrid.innerHTML = '';
+                
+                this.processedImages.forEach((item, index) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    previewItem.innerHTML = `
+                        <h4>${item.original}</h4>
+                        <img src="${item.downloadUrl}" alt="Cropped ${item.original}">
+                        <br>
+                        <a href="${item.downloadUrl}" download="${item.cropped.fileName}" class="download-btn">
+                            ⬇️ Download
+                        </a>
+                    `;
+                    
+                    previewGrid.appendChild(previewItem);
+                });
+                
+                // Add download all button
+                if (this.processedImages.length > 1) {
+                    const downloadAllBtn = document.createElement('button');
+                    downloadAllBtn.textContent = '📦 Download Semua';
+                    downloadAllBtn.className = 'upload-btn';
+                    downloadAllBtn.style.marginTop = '20px';
+                    downloadAllBtn.onclick = () => this.downloadAll();
+                    previewGrid.parentNode.appendChild(downloadAllBtn);
+                }
+            }
+            
+            downloadAll() {
+                this.processedImages.forEach((item, index) => {
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.href = item.downloadUrl;
+                        link.download = item.cropped.fileName;
+                        link.click();
+                    }, index * 500); // Delay untuk menghindari browser blocking
+                });
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new AvatarCropper();
+        });
+    </script>
+</body>
+</html>

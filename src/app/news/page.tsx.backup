@@ -1,0 +1,199 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Link from 'next/link';
+
+// Sample news data - in a real app this would come from an API or CMS
+const newsData = [
+  {
+    id: 1,
+    title: "Alter Ego Wins MPL Indonesia Season 12 Championship",
+    excerpt: "Our Mobile Legends: Bang Bang team secures another victory in the prestigious MPL Indonesia tournament.",
+    content: "In an exciting finale, Alter Ego's Mobile Legends: Bang Bang team emerged victorious at the MPL Indonesia Season 12 Championship. After months of intense competition, the team demonstrated exceptional skill and teamwork throughout the tournament, culminating in a thrilling 4-2 series win against EVOS Esports in the grand finals.",
+    date: "2023-10-15",
+    author: "Esports Desk",
+    category: "Tournament",
+    image: "/assets/images/sampul.png",
+    readTime: "3 min read"
+  },
+  {
+    id: 2,
+    title: "New Signing: Star Player Joins Alter Ego Valorant Division",
+    excerpt: "We're excited to announce the addition of a rising star to our Valorant roster.",
+    content: "Alter Ego Esports is proud to welcome Alex 'ProShot' Johnson to our Valorant division. Known for his exceptional aim and strategic gameplay, ProShot brings valuable experience from his previous team and is expected to strengthen our competitive lineup as we prepare for upcoming international tournaments.",
+    date: "2023-09-28",
+    author: "Recruitment Team",
+    category: "Roster",
+    image: "/assets/images/sampul.png",
+    readTime: "2 min read"
+  },
+  {
+    id: 3,
+    title: "Community Event: Fan Meet & Greet with MLBB Team",
+    excerpt: "Join us for an exclusive fan event featuring our Mobile Legends players.",
+    content: "Alter Ego Esports invites all fans to our special Community Event on November 5th. Meet your favorite MLBB players, get autographs, participate in mini-games, and enjoy exclusive merchandise discounts. Limited spots available - register now through our official social media channels.",
+    date: "2023-09-20",
+    author: "Community Team",
+    category: "Events",
+    image: "/assets/images/sampul.png",
+    readTime: "2 min read"
+  },
+  {
+    id: 4,
+    title: "Alter Ego Partners with Premium Gaming Gear Brand",
+    excerpt: "New sponsorship deal will enhance our players' training and competition experience.",
+    content: "We're thrilled to announce a new partnership with CyberGear, a leading manufacturer of high-performance gaming equipment. This collaboration will provide our players with cutting-edge gear for both training and official competitions, further supporting our commitment to excellence in esports.",
+    date: "2023-09-12",
+    author: "Business Development",
+    category: "Partnership",
+    image: "/assets/images/sampul.png",
+    readTime: "3 min read"
+  },
+  {
+    id: 5,
+    title: "Academy Program Launched for Aspiring Esports Athletes",
+    excerpt: "New initiative aims to nurture the next generation of professional players.",
+    content: "Alter Ego Esports is proud to launch our Academy Program, designed to identify and develop talented gamers from across Indonesia. The program offers professional coaching, mental conditioning, and career guidance to help aspiring esports athletes reach their full potential in the competitive scene.",
+    date: "2023-08-30",
+    author: "Academy Director",
+    category: "Program",
+    image: "/assets/images/sampul.png",
+    readTime: "4 min read"
+  },
+  {
+    id: 6,
+    title: "International Tournament Preview: What to Expect",
+    excerpt: "Our teams prepare for the upcoming Southeast Asia Regional Championship.",
+    content: "As we approach the Southeast Asia Regional Championship, our teams are intensifying their training regimens and refining strategies. This tournament will feature top teams from across the region and serves as a qualifier for the World Championship. Stay tuned for live updates and behind-the-scenes content.",
+    date: "2023-08-15",
+    author: "Esports Desk",
+    category: "Tournament",
+    image: "/assets/images/sampul.png",
+    readTime: "3 min read"
+  }
+];
+
+export default function News() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Get unique categories
+  const categories = ['All', ...new Set(newsData.map(item => item.category))];
+
+  // Filter news by category
+  const filteredNews = selectedCategory === 'All' 
+    ? newsData 
+    : newsData.filter(item => item.category === selectedCategory);
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden pt-16">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/90 z-10"></div>
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-black"></div>
+          </div>
+          
+          <div className="container mx-auto px-6 relative z-20 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="w-24 h-24 mx-auto mb-6">
+                <img 
+                  src="/assets/logos/alteregologo.png" 
+                  alt="Alter Ego Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h1 className="text-display mb-4 text-white">
+                Latest <span className="text-primary">News</span>
+              </h1>
+              <p className="text-subheading text-gray-300 max-w-2xl mx-auto">
+                Stay updated with the latest announcements, tournament results, and team news from Alter Ego Esports
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Category Filter */}
+        <section className="py-8 bg-background border-b border-border-color">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-primary text-white'
+                      : 'bg-card-bg text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* News Grid */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredNews.map((news, index) => (
+                <motion.div
+                  key={news.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="minimal-card overflow-hidden h-full flex flex-col"
+                >
+                  <div className="aspect-video bg-gradient-to-br from-gray-800 to-black flex items-center justify-center relative">
+                    <img 
+                      src={news.image} 
+                      alt={news.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <span className="absolute top-4 left-4 bg-primary/20 text-primary text-xs px-3 py-1 rounded-full">
+                      {news.category}
+                    </span>
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center text-gray-400 text-sm mb-3">
+                      <span>{new Date(news.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      <span className="mx-2">•</span>
+                      <span>{news.readTime}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-3 flex-grow">{news.title}</h3>
+                    <p className="text-gray-400 text-sm mb-4">{news.excerpt}</p>
+                    <div className="mt-auto">
+                      <Link 
+                        href={`/news/${news.id}`} 
+                        className="text-primary text-sm font-medium flex items-center hover:opacity-80 transition-opacity"
+                      >
+                        Read more
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+}

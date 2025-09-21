@@ -1,0 +1,47 @@
+{
+  "organization": {
+    "name": "Alter Ego Esports",
+    "region": "Indonesia",
+    "founded": "2017",
+    "primaryGame": "Mobile Legends: Bang Bang"
+  },
+  "links": {
+    "website": "alterego.gg",
+    "socialMedia": {
+      "instagram": "@alterego.id",
+      "twitter": "@AlterEgoID",
+      "facebook": "Alter Ego Esports",
+      "youtube": "Alter Ego Esports"
+    }
+  },
+  "history": "Alter Ego Esports was founded in 2017 as one of Indonesia's prominent esports organizations. The organization has focused primarily on mobile gaming titles, especially Mobile Legends: Bang Bang, and has become a significant competitor in the Southeast Asian esports scene. In 2025, Alter Ego expanded into the PC gaming scene with the addition of a Counter-Strike division.",
+  "teams": [
+    {
+      "name": "Mobile Legends: Bang Bang",
+      "type": "Main team"
+    },
+    {
+      "name": "Mobile Legends: Bang Bang",
+      "type": "Secondary/Development team"
+    },
+    {
+      "name": "Other mobile esports titles",
+      "type": "Various mobile games"
+    },
+    {
+      "name": "Counter-Strike",
+      "type": "PC FPS team"
+    }
+  ],
+  "achievements": [
+    "2021 MPL Indonesia Season 9 Champions",
+    "Multiple MPL Indonesia (Mobile Legends Professional League) titles",
+    "Multiple tournament victories in various MLBB competitions",
+    "Consistent top placements in Southeast Asian MLBB tournaments"
+  ],
+  "brand": {
+    "colors": ["Purple", "White"],
+    "logoDescription": "Features a stylized 'AE' with a purple color scheme"
+  },
+  "note": "This information is based on available knowledge and may not reflect the most current details. For the latest information on roster changes, achievements, and updates, please visit their official website and social media channels."
+}

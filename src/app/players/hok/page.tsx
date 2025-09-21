@@ -1,0 +1,138 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+
+// Placeholder data - will be updated when you provide player details
+const players = [
+  {
+    id: 1,
+    nickname: "Player 1",
+    fullName: "Full Name",
+    role: "Role",
+    status: "Status",
+    image: "/assets/players/logohok.jpeg"
+  },
+  {
+    id: 2,
+    nickname: "Player 2",
+    fullName: "Full Name",
+    role: "Role",
+    status: "Status",
+    image: "/assets/players/logohok.jpeg"
+  },
+  {
+    id: 3,
+    nickname: "Player 3",
+    fullName: "Full Name",
+    role: "Role",
+    status: "Status",
+    image: "/assets/players/logohok.jpeg"
+  },
+  {
+    id: 4,
+    nickname: "Player 4",
+    fullName: "Full Name",
+    role: "Role",
+    status: "Status",
+    image: "/assets/players/logohok.jpeg"
+  },
+  {
+    id: 5,
+    nickname: "Player 5",
+    fullName: "Full Name",
+    role: "Role",
+    status: "Status",
+    image: "/assets/players/logohok.jpeg"
+  }
+];
+
+export default function HOKPlayers() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-16">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/90 z-10"></div>
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-black"></div>
+          </div>
+          
+          <div className="container mx-auto px-6 relative z-20 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="w-24 h-24 mx-auto mb-6">
+                <img 
+                  src="/assets/players/logohok.jpeg" 
+                  alt="Honor of Kings Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h1 className="text-display mb-4 text-white">
+                Honor of <span className="text-primary">Kings</span>
+              </h1>
+              <p className="text-subheading text-gray-300 max-w-2xl mx-auto">
+                Meet the talented players representing Alter Ego Esports in Honor of Kings tournaments
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Players Grid */}
+        <section className="py-16 bg-black">
+          <div className="container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            >
+              {players.map((player, index) => (
+                <motion.div
+                  key={player.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="minimal-card overflow-hidden"
+                >
+                  <div className="aspect-square bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+                    <div className="relative w-32 h-32">
+                      <img 
+                        src={player.image} 
+                        alt={player.nickname}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-bold text-white">{player.nickname}</h3>
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                        {player.role}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-3">{player.fullName}</p>
+                    {player.status && (
+                      <span className="inline-block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">
+                        {player.status}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+}
