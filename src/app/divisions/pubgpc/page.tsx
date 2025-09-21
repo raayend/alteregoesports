@@ -73,7 +73,7 @@ export default function PUBGPCDivision() {
             >
               <div className="w-24 h-24 mx-auto mb-6">
                 <img
-                  src="/assets/logos/logopubgpc.png"
+                  src="/assets/logos/logopubg.jpeg"
                   alt="PUBG PC Logo"
                   className="w-full h-full object-contain"
                 />

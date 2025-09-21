@@ -11,6 +11,9 @@ const rajdhani = Rajdhani({
 export const metadata: Metadata = {
   title: "Alter Ego Esports | Professional Mobile Esports Team",
   description: "Professional esports organization based in Indonesia, competing at the highest level in Mobile Legends: Bang Bang and other mobile esports titles.",
+  icons: {
+    icon: "/assets/logos/alteregologo.png",
+  },
 };
 
 export default function RootLayout({
