@@ -231,20 +231,6 @@ export default function News() {
               >
                 Stay updated with the latest announcements, tournament results, and team news from Alter Ego Esports
               </motion.p>
-              
-              {/* Minimalist CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.7 }}
-              >
-                <div className="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 border border-primary/50 cursor-default">
-                  <span className="mr-2">Future Roadmap</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </motion.div>
             </motion.div>
           </div>
         </section>

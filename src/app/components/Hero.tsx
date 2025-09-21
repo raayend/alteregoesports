@@ -83,8 +83,8 @@ export default function Hero() {
             <Link href="/divisions" className="btn btn-primary">
               Explore Our Divisions
             </Link>
-            <Link href="/divisions" className="btn btn-outline">
-              Meet Our Players
+            <Link href="/updates" className="btn btn-outline">
+              Roadmap Website Alter Ego Esports
             </Link>
           </motion.div>
         </div>
