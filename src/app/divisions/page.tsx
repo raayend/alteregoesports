@@ -240,64 +240,65 @@ export default function DivisionsPage() {
                   onMouseEnter={() => setHoveredDivision(division.id)}
                   onMouseLeave={() => setHoveredDivision(null)}
                 >
-                  {/* Elegant card design with red/black theme */}
-                  <div className={`relative h-full rounded-2xl overflow-hidden border border-red-500/30 bg-gradient-to-br from-card-bg to-dark-bg backdrop-blur-sm transition-all duration-500 shadow-xl hover:shadow-2xl ${hoveredDivision === division.id ? 'ring-2 ring-red-500/50' : ''}`}>
-                    {/* Red gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    {/* Game logo centered with elegant styling */}
-                    <div className="flex flex-col items-center justify-center p-8">
-                      <div className="relative w-40 h-40 flex items-center justify-center mb-6">
-                        <motion.div 
-                          className="absolute inset-0 rounded-2xl bg-red-500/10 group-hover:scale-110 transition-transform duration-500"
-                          animate={hoveredDivision === division.id ? { 
-                            scale: [1, 1.1, 1],
-                            rotate: [0, 5, 0]
-                          } : {}}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        ></motion.div>
-                        <div className="relative w-32 h-32 flex items-center justify-center bg-gradient-to-br from-card-bg to-dark-bg rounded-xl border border-border-color/50 p-4 shadow-lg group-hover:scale-110 transition-transform duration-500">
-                          <img 
-                            src={division.image} 
-                            alt={division.name}
-                            className="w-24 h-24 object-contain"
-                          />
-                        </div>
-                      </div>
+                  <Link href={division.link} className="block h-full">
+                    {/* Elegant card design with red/black theme */}
+                    <div className={`relative h-full rounded-2xl overflow-hidden border border-red-500/30 bg-gradient-to-br from-card-bg to-dark-bg backdrop-blur-sm transition-all duration-500 shadow-xl hover:shadow-2xl ${hoveredDivision === division.id ? 'ring-2 ring-red-500/50' : ''}`}>
+                      {/* Red gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      <h3 className="text-xl font-bold text-foreground mb-2 text-center">{division.name}</h3>
-                      <div className="px-3 py-1 bg-red-500/10 rounded-full border border-red-500/30 mb-4">
-                        <span className="text-red-400 font-medium text-sm">{division.game}</span>
-                      </div>
-                      <p className="text-gray-500 text-center text-sm">{division.description}</p>
-                      
-                      {/* Development status indicator */}
-                      {division.development && (
-                        <div className="mt-4 px-3 py-1 bg-yellow-500/10 rounded-full border border-yellow-500/30">
-                          <span className="text-yellow-400 font-medium text-xs">In Development</span>
+                      {/* Game logo centered with elegant styling */}
+                      <div className="flex flex-col items-center justify-center p-8">
+                        <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+                          <motion.div 
+                            className="absolute inset-0 rounded-2xl bg-red-500/10 group-hover:scale-110 transition-transform duration-500"
+                            animate={hoveredDivision === division.id ? { 
+                              scale: [1, 1.1, 1],
+                              rotate: [0, 5, 0]
+                            } : {}}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          ></motion.div>
+                          <div className="relative w-32 h-32 flex items-center justify-center bg-gradient-to-br from-card-bg to-dark-bg rounded-xl border border-border-color/50 p-4 shadow-lg group-hover:scale-110 transition-transform duration-500">
+                            <img 
+                              src={division.image} 
+                              alt={division.name}
+                              className="w-24 h-24 object-contain"
+                            />
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    
-                    {/* CTA Button */}
-                    <div className="p-6 pt-0 flex justify-center">
-                      <Link 
-                        href={division.link} 
-                        className={`flex items-center justify-center px-4 py-3 w-full ${
-                          division.development 
-                            ? "bg-yellow-500/10 hover:bg-yellow-500/20 text-foreground border border-yellow-500/30 hover:border-yellow-500/50" 
-                            : "bg-red-500/10 hover:bg-red-500/20 text-foreground border border-red-500/30 hover:border-red-500/50"
-                        } font-medium text-sm rounded-lg transition-all duration-300`}
-                      >
-                        <span>{division.development ? "Coming Soon" : "View Team"}</span>
-                        {!division.development && (
-                          <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
+                        
+                        <h3 className="text-xl font-bold text-foreground mb-2 text-center">{division.name}</h3>
+                        <div className="px-3 py-1 bg-red-500/10 rounded-full border border-red-500/30 mb-4">
+                          <span className="text-red-400 font-medium text-sm">{division.game}</span>
+                        </div>
+                        <p className="text-gray-500 text-center text-sm">{division.description}</p>
+                        
+                        {/* Development status indicator */}
+                        {division.development && (
+                          <div className="mt-4 px-3 py-1 bg-yellow-500/10 rounded-full border border-yellow-500/30">
+                            <span className="text-yellow-400 font-medium text-xs">In Development</span>
+                          </div>
                         )}
-                      </Link>
+                      </div>
+                      
+                      {/* CTA Button */}
+                      <div className="p-6 pt-0 flex justify-center">
+                        <div 
+                          className={`flex items-center justify-center px-4 py-3 w-full ${
+                            division.development 
+                              ? "bg-yellow-500/10 hover:bg-yellow-500/20 text-foreground border border-yellow-500/30 hover:border-yellow-500/50" 
+                              : "bg-red-500/10 hover:bg-red-500/20 text-foreground border border-red-500/30 hover:border-red-500/50"
+                          } font-medium text-sm rounded-lg transition-all duration-300`}
+                        >
+                          <span>{division.development ? "Coming Soon" : "View Team"}</span>
+                          {!division.development && (
+                            <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </div>
