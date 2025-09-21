@@ -47,7 +47,7 @@ const partners: Partner[] = [
     name: "Interbat", 
     logo: "/assets/sponsors/interbat.png",
     description: "PT. Interbat adalah perusahaan farmasi terkemuka di Indonesia yang didirikan pada tahun 1948 oleh Bapak Djoko Sukamto. Berawal sebagai distributor obat-obatan Eropa, Interbat berkembang menjadi produsen farmasi independen sejak tahun 1959, kini memproduksi berbagai macam produk farmasi mulai dari obat resep, obat bebas (OTC), suplemen kesehatan, hingga produk diagnostik dalam berbagai bentuk sediaan.",
-    website: "https://interbat.com",
+    website: "https://www.interbat.co.id/",
     category: "Healthcare"
   },
   { 
@@ -119,6 +119,23 @@ const PartnerCard = ({ partner, index }: { partner: Partner; index: number }) =>
               {expanded ? "Tampilkan Lebih Sedikit" : "Baca Selengkapnya"}
             </button>
           )}
+        </div>
+        
+        {/* Visit Website Button */}
+        <div className="mt-auto">
+          <a 
+            href={partner.website} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title={`Kunjungi website ${partner.name}`}
+            className="inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark text-white font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+          >
+            Kunjungi Website
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+              <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+            </svg>
+          </a>
         </div>
       </div>
     </motion.div>
