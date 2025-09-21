@@ -7,8 +7,17 @@ import { FiArrowLeft, FiAward } from 'react-icons/fi';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+interface Partner {
+  id: number;
+  name: string;
+  logo: string;
+  description: string;
+  website: string;
+  category: string;
+}
+
 // Data partner dengan tambahan informasi detail
-const partners = [
+const partners: Partner[] = [
   { 
     id: 1, 
     name: "Boncabe", 
@@ -59,7 +68,7 @@ const partners = [
   }
 ];
 
-const PartnerCard = ({ partner, index }: { partner: any; index: number }) => {
+const PartnerCard = ({ partner, index }: { partner: Partner; index: number }) => {
   const [expanded, setExpanded] = useState(false);
   const maxLength = 120;
 

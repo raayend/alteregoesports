@@ -6,8 +6,18 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Link from 'next/link';
 
+interface Division {
+  id: number;
+  name: string;
+  game: string;
+  description: string;
+  image: string;
+  link: string;
+  development?: boolean;
+}
+
 export default function DivisionsPage() {
-  const divisions = [
+  const divisions: Division[] = [
     {
       id: 1,
       name: "Mobile Legends (MPL)",
@@ -76,7 +86,7 @@ export default function DivisionsPage() {
     }
   ];
 
-  const [selectedDivision, setSelectedDivision] = useState<any>(null);
+  const [selectedDivision, setSelectedDivision] = useState<Division | null>(null);
   const [hoveredDivision, setHoveredDivision] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
 
