@@ -283,7 +283,7 @@ export default function DivisionsPage() {
                     <div className="p-6 pt-0 flex justify-center">
                       <Link 
                         href={division.link} 
-                        className={`inline-flex items-center px-4 py-2 ${
+                        className={`flex items-center justify-center px-4 py-3 w-full ${
                           division.development 
                             ? "bg-yellow-500/10 hover:bg-yellow-500/20 text-foreground border border-yellow-500/30 hover:border-yellow-500/50" 
                             : "bg-red-500/10 hover:bg-red-500/20 text-foreground border border-red-500/30 hover:border-red-500/50"
