@@ -45,7 +45,7 @@ export default function TransparentHeader() {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 bg-transparent transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -92,7 +92,7 @@ export default function TransparentHeader() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4">
+          <div className="md:hidden py-4 bg-black/30 backdrop-blur-sm">
             <nav className="flex flex-col space-y-4">
               {navLinks.map((link) => (
                 <Link

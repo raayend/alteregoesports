@@ -23,7 +23,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -70,7 +70,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border-color">
+          <div className="md:hidden py-4 border-t border-border-color bg-black/30 backdrop-blur-sm">
             <nav className="flex flex-col space-y-4">
               {navLinks.map((link) => (
                 <Link
