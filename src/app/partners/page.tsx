@@ -149,7 +149,7 @@ export default function PartnersPage() {
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-24 md:py-40 overflow-hidden">
+        <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden pt-16">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/15 to-secondary/30"></div>
           <div className="absolute inset-0 bg-[url('/assets/images/hero-pattern.png')] bg-repeat opacity-5"></div>
           <div className="container mx-auto px-6 relative z-10">
