@@ -48,7 +48,7 @@ export default function DivisionsPage() {
       game: "PUBG",
       description: "Our PC division competing in the original battle royale experience.",
       image: "/assets/logos/logopubg.jpeg",
-      link: "/divisions/pubg-pc"
+      link: "/divisions/pubgpc"
     },
     {
       id: 4,
